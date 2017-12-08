@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %
+    <h1> Enter your new posts is under construction  </h1>
+    <form action="/blog" method="post">
+        <table>
+            <tr>
+                <td>
+                    <label for="blog_title"> Title for your new blog: </label>
+                </td>
+            <tr>
+                <td>
+                    <input type="text" name="blog_title"  />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="blog_body"> Your new blog:></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <<textarea name="blog" id="blog_body" cols="30" rows="10">
+                    </textarea>>
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}}

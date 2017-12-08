@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+    <head>
+        <title>
+            {{title}}
+        </title>
+        <style>
+            .error {
+                color: red;
+            }
+            .new_blog_post {
+                margin-left: 20px
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        <a href="/blog"> Main Blog Page</a>                              
+                    </td>
+                    <td>
+                        <a class="new_blog_post" href="/newpost">Add a Bog Entry</a>                            
+                    </td>
+                </tr>
+            </table>
+        </div> 
+        {% block content  %}
+
+        <!--
+        <h1> Successfully running</h1>
+        -->
+
+        {% endblock %}
+    </body>
+</html>
