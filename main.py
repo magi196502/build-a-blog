@@ -59,13 +59,22 @@ def newpost():
     # If the user enters values and attempts to submit validate the fields
     if request.method == 'POST':
         title = request.form['blog_title']
+        title = title.strip()
         blog_body = request.form['blog_body']
         blog_body = blog_body.strip()
 
         # If either field is empty send a message to the user        
         if title == "" or blog_body == "" or len(title) < 1 or len(blog_body) < 1:
-            flash('The title or blog is empty, please enter values.','error')
-            return render_template('newpost.html',blog_title=title,blog_body=blog_body)
+            if title == "" and blog_body == "":
+                flash('The title is empty, please enter a title.','error')
+                flash('The blog message empty, please enter a message.','error')
+                return render_template('newpost.html',blog_title=title,blog_body=blog_body)
+            if title == "":
+                flash('The title is empty, please enter a title.','error')
+                return render_template('newpost.html',blog_title=title,blog_body=blog_body)
+        if blog_body == "":
+                flash('The blog message empty, please enter a message.','error')
+                return render_template('newpost.html',blog_title=title,blog_body=blog_body)
         else:
             # Submit users entry into the database
             new_blog_entry = Blog(title, blog_body)
