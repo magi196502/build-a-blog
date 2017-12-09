@@ -14,25 +14,11 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     blog_body = db.Column(db.String(2500))
-    #owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, title, blog_body):
         self.title = title
         self.blog_body = blog_body
-#       self.owner = owner
     
-"""
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(120))
-    tasks = db.relationship('Task', backref='owner')
-
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
-"""
-
 # Before request, set the allowed routes
 @app.before_request
 def blog_home():
@@ -40,18 +26,17 @@ def blog_home():
     if request.endpoint not in allowed_routes:
         return redirect('/blog')
 
-
 # Set the blog route
 @app.route('/blog', methods=['POST','GET'])
 def blog():
-    posts = Blog.query.all()                # Query all posts when form is rendered
+    if request.method == 'GET':
+        id = request.args.get("id")                         # Get the id parameter
+        blog_post = Blog.query.filter_by(id=id).all()       # Query by single post 
+        posts = Blog.query.all()                            # Query all posts when form is rendered
 
-    # Render form with all posts
-    return render_template('blog.html',title="Build a Blog", posts=posts)
+        # Render the template and pass the parameters
+        return render_template('blog.html',title="Build a Blog", blog_post=blog_post, posts=posts)
 
-#            flash('User password incorrect, or user does not exist','error')
-     
-#@app.route('/newpost', methods=['POST','GET'])
 # Set the new post route
 @app.route('/newpost', methods=['POST','GET'])
 def newpost():
@@ -81,8 +66,10 @@ def newpost():
             db.session.add(new_blog_entry)
             db.session.commit()
 
+            # Redirect to the home page
             return redirect("/")
     else:
+        # If the method isn't post render the form
         return render_template('newpost.html')
 
 
@@ -90,28 +77,16 @@ def newpost():
 @app.route('/',methods=['POST','GET'])
 def index():
 
-    posts = Blog.query.all()
+    # pocess the post method
     if request.method == 'POST':
-        posts = Blog.query.all()
- #      new_post = Blog.query.filter_by(id=d)        
+        pass
     else:
-#       posts = Blog.query.all()
- #      return redirect('/blog?id=' + post.id)
-        new_post = Blog.query.filter_by(id=id)        
-#    owner = User.query.filter_by(email=session['email']).first()
-#    if request.method == 'POST':
-#        task_name = request.form['task']
-#        new_task = Task(task_name, owner)
-#        db.session.add(new_task)
-#        db.session.commit()
+        # Process get requests
+        posts = Blog.query.all()                        # Query all blogs
+        id = request.args.get("id")                     # Get the blog id
+        blog_post = Blog.query.filter_by(id=id).all()   # Get an individual blog
 
-#   tasks = Task.query.all()
-#    tasks = Task.query.filter_by(completed=False,owner=owner).all()
-#    completed_tasks = Task.query.filter_by(completed=True,owner=owner).all()
-
- #       tasks.append(task)
-    
-    return render_template('blog.html',title="Build a Blog", posts=posts,id=id)
+        return render_template('blog.html',title="Build a Blog", blog_post=blog_post, posts=posts)
 
 # If app is called from main run
 if __name__ == '__main__':

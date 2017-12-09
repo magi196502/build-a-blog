@@ -1,21 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Build a Blog</h1>
-    <form>
 
+</form>
+
+    <form action="/blog">
+        {% if blog_post|length == 0: %}
+
+            {% if posts|length == 0 %}
+            
+                <p></p>
+
+                {% else %}
+                    {% for post in posts %}
+                    <div>
+                        <input type="hidden" value="{{ post.id }}">
+                        <p> <a href="/blog?id={{ post.id}}"> {{ post.title }} </a>  </p>
+                        <p> {{ post.blog_body }} </p>
+                    </div>
+                    <hr/>
+                {% endfor %}
+
+            {% endif %}   
+
+        {% else %}
+            {% if blog_post|length == 0 %}
+                    <p></p>
+            {% else %}
+                {% for blog in blog_post %}
+                    <div>
+                        <h1 class="single_blog" >{{ blog.title }}</h1>
+                        <p class="single_blog_body">{{ blog.blog_body }}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endif %}    
     </form>
-
-    {% if posts|length == 0 %}
-        <p> No posts yet</p>
-    {% else %}
-        {% for post in posts %}
-        <div>
-            <input type="hidden" value="{{ post.id }}">
-            <p> <a href="/blog?={{ post.id}}"> {{ post.title }} </a>  </p>
-            <p> {{ post.blog_body }} </p>
-        </div>
-        <hr/>
-        {% endfor %}
-    {% endif %}
 
 {% endblock %}
