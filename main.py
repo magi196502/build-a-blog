@@ -65,9 +65,8 @@ def newpost():
             new_blog_entry = Blog(title, blog_body)
             db.session.add(new_blog_entry)
             db.session.commit()
-
-            # Redirect to the home page
-            return redirect("/")
+            blog_id = str(new_blog_entry.id)
+            return redirect("/blog?id=" + blog_id)
     else:
         # If the method isn't post render the form
         return render_template('newpost.html')
