@@ -32,7 +32,9 @@ def blog():
     if request.method == 'GET':
         id = request.args.get("id")                         # Get the id parameter
         blog_post = Blog.query.filter_by(id=id).all()       # Query by single post 
-        posts = Blog.query.all()                            # Query all posts when form is rendered
+        #posts = Blog.query.all()                           # Query all posts when form is rendered
+#       posts = Blog.query.order_by(Blog.id.desc()).limit(3).all()    # Query all posts when form is rendered
+        posts = Blog.query.order_by(Blog.id.desc()).all()    # Query all posts when form is rendered
 
         # Render the template and pass the parameters
         return render_template('blog.html',title="Build a Blog", blog_post=blog_post, posts=posts)
@@ -81,7 +83,9 @@ def index():
         pass
     else:
         # Process get requests
-        posts = Blog.query.all()                        # Query all blogs
+#       posts = Blog.query.all()                        # Query all blogs
+#       posts = Blog.query.order_by(Blog.id.desc()).limit(3).all()    # Query all posts when form is rendered
+        posts = Blog.query.order_by(Blog.id.desc()).all()    # Query all posts when form is rendered
         id = request.args.get("id")                     # Get the blog id
         blog_post = Blog.query.filter_by(id=id).all()   # Get an individual blog
 

@@ -1,0 +1,28 @@
+textarea{
+    resize: none;
+    text-align: justify;
+    white-space: normal;
+    -moz-text-align-last: left;
+    text-align-last: left;
+}
+.error {
+    color: red;
+}
+.new_blog_post {
+    margin-left: 20px
+}
+
+.newpost {
+    text-align: center;
+}
+.single_blog {
+    text-align: center;                
+}
+
+table tr.rowspacer {
+    height: 40px;
+}
+
+.single_blog_body{
+    font-size: 25px;           
+ }
