@@ -1,5 +1,7 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
 #from sqlalchemy import Column, Integer, String, Boolean
 #from sqlalchemy.ext.declarative import declarative_base
 
@@ -14,10 +16,15 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     blog_body = db.Column(db.String(2500))
+    post_date = db.Column(db.DateTime)
+#   post_date = db.Column(db.DateTime, default=datetime.utcnow)
 
-    def __init__(self, title, blog_body):
+    def __init__(self, title, blog_body, post_date=None):
         self.title = title
         self.blog_body = blog_body
+        if post_date is None:
+            post_date = datetime.utcnow()        
+        self.post_date = post_date
     
 # Before request, set the allowed routes
 @app.before_request
@@ -34,7 +41,8 @@ def blog():
         blog_post = Blog.query.filter_by(id=id).all()       # Query by single post 
         #posts = Blog.query.all()                           # Query all posts when form is rendered
 #       posts = Blog.query.order_by(Blog.id.desc()).limit(3).all()    # Query all posts when form is rendered
-        posts = Blog.query.order_by(Blog.id.desc()).all()    # Query all posts when form is rendered
+#       posts = Blog.query.order_by(Blog.id.desc()).all()    # Query all posts when form is rendered
+        posts = Blog.query.order_by(Blog.post_date.desc()).all()    # Query all posts when form is rendered
 
         # Render the template and pass the parameters
         return render_template('blog.html',title="Build a Blog", blog_post=blog_post, posts=posts)
@@ -49,6 +57,7 @@ def newpost():
         title = title.strip()
         blog_body = request.form['blog_body']
         blog_body = blog_body.strip()
+        post_date = datetime.now()
 
         # If either field is empty send a message to the user        
         if title == "" or blog_body == "" or len(title) < 1 or len(blog_body) < 1:
@@ -64,7 +73,7 @@ def newpost():
                 return render_template('newpost.html',blog_title=title,blog_body=blog_body)
         else:
             # Submit users entry into the database
-            new_blog_entry = Blog(title, blog_body)
+            new_blog_entry = Blog(title, blog_body, post_date)
             db.session.add(new_blog_entry)
             db.session.commit()
             blog_id = str(new_blog_entry.id)
@@ -85,7 +94,8 @@ def index():
         # Process get requests
 #       posts = Blog.query.all()                        # Query all blogs
 #       posts = Blog.query.order_by(Blog.id.desc()).limit(3).all()    # Query all posts when form is rendered
-        posts = Blog.query.order_by(Blog.id.desc()).all()    # Query all posts when form is rendered
+#       posts = Blog.query.order_by(Blog.id.desc()).all()    # Query all posts when form is rendered
+        posts = Blog.query.order_by(Blog.post_date.desc()).all()    # Query all posts when form is rendered
         id = request.args.get("id")                     # Get the blog id
         blog_post = Blog.query.filter_by(id=id).all()   # Get an individual blog
 
